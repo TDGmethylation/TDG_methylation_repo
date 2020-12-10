@@ -47,7 +47,14 @@ x2_factor <- model.matrix(Intensity ~ p3_nt1 + p4_nt1 + p2_nt2 + p3_nt2 + p2_nt3
 LASSO_RE2 <- glmnet(x2_factor, Intensity, alpha = 1)
 cvfit2 <- cv.glmnet(x2_factor, Intensity)
 LASSO_predict2 <- predict(cvfit2, newx = x2_factor, s = "lambda.min")
+LASSO_predict2_test <- predict(cvfit2, newx = x2_factor, s = "lambda.1se")
+plot(LASSO_predict2, LASSO_predict2_test)
+
+#Here, discuss with Raluca, which lambda to use, default is 1se.We could shrink variables
+#using 1se but not lambda.min.
 plot(LASSO_predict2, TDG_context$Intensity)
+plot(LASSO_predict2_test, TDG_context$Intensity)
+#
 
 R_calc_data2 = data.frame(x = LASSO_predict2, y = TDG_context$Intensity)
 predict_lm2 = lm(X1 ~ y, data = R_calc_data2)
@@ -100,13 +107,18 @@ x6_factor <- model.matrix(Intensity ~ p0_nt1 + p1_nt1 + p3_nt1 + p4_nt1 + p5_nt1
                             p0_nt2 + p1_nt2 + p2_nt2 + p3_nt2 + p4_nt2 + p5_nt2 +
                             p0_nt3 + p1_nt3 + p2_nt3 + p3_nt3 + p4_nt3)[, -1]
 LASSO_RE6 <- glmnet(x6_factor, Intensity, alpha = 1)
-cvfit6 <- cv.glmnet(x6_factor, Intensity)
+cvfit6 <- cv.glmnet(x6_factor, Intensity) #Here, default alpha = 1, we will use the cv-ed one.
 LASSO_predict6 <- predict(cvfit6, newx = x6_factor, s = "lambda.min")
+LASSO_predict6_test <- predict(cvfit6, newx = x6_factor, s = "lambda.1se")
 plot(LASSO_predict6, TDG_context$Intensity)
 
 R_calc_data6 = data.frame(x = LASSO_predict6, y = TDG_context$Intensity)
 predict_lm6 = lm(X1 ~ y, data = R_calc_data6)
 summary(predict_lm6)
+
+###6mer is the longest model, here we output the result###
+write.table(as.matrix(cvfit6[["glmnet.fit"]][["beta"]]), 
+            file = "/Users/gerogehou/Desktop/R/TDG_context_analysis/LASSO_beta.tsv", sep = "\t")
 
 #######################N-mer_test_TDGcontext_boundary_end######################
 
