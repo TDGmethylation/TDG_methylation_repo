@@ -1,8 +1,14 @@
 %% This code is to finalize the TDG methylation on liver right lobe & HepG2 cell lines.
 
-%Here, the data comes from sorted CpN methylation files. Each CpN is in
-%col1, 2, 3, 4. The format will be 1024x4, in TDG FI decreasing order.
-%Data = zeros(1, 4)
+MutS_MM = zeros(1, 1)
+MutS_WT = zeros(1, 1)
+hist(MutS_MM, 30, 'auto')
+hold on
+hist(MutS_WT, 30,  'auto')
+hold off
+
+
+Data = zeros(1, 4)
 
 CpN_bins_mean = zeros(32, 5);
 CpN_bins_median = zeros(32, 5);
